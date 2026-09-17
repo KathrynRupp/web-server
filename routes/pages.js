@@ -2,6 +2,7 @@ import { Router } from "express";
 
 const router = Router();
 
+//for /projects
 const projects = [
   { name: "Weather app", tag: "javascript" },
   { name: "Portfolio site", tag: "express" },
@@ -12,25 +13,22 @@ router.get("/", (req, res) => {
   res.send("Home page");
 });
 
-/*
-router.get("/projects", (req, res) => {
-  const tag = req.query.tag || "";
-  const name = req.query.name || "";
-  const matchingProjects = projects
-    .filter((project) => project.name === name)
-    .filter((project) => project.tag === tag);
-
-  if (tag === "" && name === "") {
-    res.json(projects);
-  } else if (tag === "") {
-    res.json(projects.filter((project) => project.name === name));
-  } else if (name === "") {
-    res.json(projects.filter((project) => project.tag === tag));
-  } else {
-    res.json(matchingProjects);
-  }
+app.get("users/:userId/posts/:postId", (req, res) => {
+  const { userId, postId } = req.params;
+  res.send("User ${userId}, post ${postId}");
 });
-*/
+
+//filter by matching tags, names, or either; or return list if no query
+router.get("/projects", (req, res) => {
+  const { tag, name } = req.query;
+
+  const matchingProjects = projects.filter(
+    (project) =>
+      (!tag || project.tag === tag) && (!name || project.name === name),
+  );
+
+  res.json(matchingProjects);
+});
 
 router.get("/about", (req, res) => {
   res.send("About page");
