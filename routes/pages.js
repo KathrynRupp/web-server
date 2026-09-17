@@ -13,9 +13,10 @@ router.get("/", (req, res) => {
   res.send("Home page");
 });
 
-app.get("users/:userId/posts/:postId", (req, res) => {
+//req.params example using multiple parameters
+router.get("/users/:userId/posts/:postId", (req, res) => {
   const { userId, postId } = req.params;
-  res.send("User ${userId}, post ${postId}");
+  res.send(`User ${userId}, post ${postId}`);
 });
 
 //filter by matching tags, names, or either; or return list if no query
