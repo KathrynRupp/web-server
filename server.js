@@ -21,6 +21,10 @@ app.get("/entries", (req, res) => {
   res.render("layout", { title: "Entries", page: "entries", entries });
 });
 
+app.get("/about", (req, res) => {
+  res.render("about", { title: "About" });
+});
+
 app.use((req, res) => {
   res.status(404).send("Page not found.");
 });
