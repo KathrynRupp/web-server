@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { join } from "path";
 
 const router = Router();
 
@@ -10,7 +11,7 @@ const projects = [
 ];
 
 router.get("/", (req, res) => {
-  res.send("Home page");
+  res.sendFile(join(import.meta.dirname, "..", "public", "index.html"));
 });
 
 //req.params example using multiple parameters
