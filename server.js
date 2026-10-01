@@ -6,6 +6,8 @@ import apiRouter from "./routes/api.js";
 const app = express();
 const PORT = process.env.port || 3000;
 
+app.use(express.static("public"));
+
 //routes
 app.use("/", pagesRouter);
 app.use("/api", apiRouter);
@@ -13,17 +15,6 @@ app.use("/api", apiRouter);
 //tell express to use ejs engine
 app.set("view engine", "ejs");
 app.set("views", "views");
-
-//entries route finds entries.ejs templates
-//passes it a data object (title and array)
-app.get("/entries", (req, res) => {
-  const entries = [{ title: "First note" }, { title: "Second note" }];
-  res.render("layout", { title: "Entries", page: "entries", entries });
-});
-
-app.get("/about", (req, res) => {
-  res.render("about", { title: "About" });
-});
 
 app.use((req, res) => {
   res.status(404).send("Page not found.");

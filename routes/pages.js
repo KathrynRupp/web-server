@@ -14,6 +14,13 @@ router.get("/", (req, res) => {
   res.sendFile(join(import.meta.dirname, "..", "public", "index.html"));
 });
 
+//entries route finds entries.ejs templates
+//passes it a data object (title and array)
+router.get("/entries", (req, res) => {
+  const entries = [{ title: "First note" }, { title: "Second note" }];
+  res.render("layout", { title: "Entries", page: "entries", entries });
+});
+
 //req.params example using multiple parameters
 router.get("/users/:userId/posts/:postId", (req, res) => {
   const { userId, postId } = req.params;
