@@ -40,7 +40,7 @@ router.get("/projects", (req, res) => {
 });
 
 router.get("/about", (req, res) => {
-  res.send("About page");
+  res.render("about");
 });
 
 export default router;

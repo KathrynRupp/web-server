@@ -1,6 +1,6 @@
 # History
 
-- Total commits on main: 11
+- Total commits on main: 12
 - First commit hash: 2d2faa0
-- Latest commit hash: 7a849b9
-- Summary of changes to views/about.ejs: Created the page and added a description
+- Latest commit hash: 0b26b6c
+- Summary of changes to views/about.ejs: Created the file, made and changed the description.
