@@ -21,7 +21,11 @@ const entries = [
 ];
 
 app.get("/entries", (req, res) => {
-  res.render("entries", { title: "My Notes", entries });
+  const accept = req.get("Accept");
+  console.log(accept);
+  res.set("Cache-Control", "public, max-age=60");
+  res.set("X-Total-Count", entries.length);
+  res.status(200).render("entries", { title: "My Notes", entries });
 });
 
 app.post("/entries", (req, res) => {
