@@ -1,11 +1,29 @@
 import { Router } from "express";
 import { join } from "path";
 import { readFile, writeFile } from "fs/promises";
+import { Ok, Err, Some, None } from "../result.js";
 
 const router = Router();
 
 //absolute path to entries data
 const ENTRIES_FILE = join(import.meta.dirname, "..", "entries.json");
+
+//async handler for rejected promises
+const asyncHandler = (fn) => (req, res, next) => {
+  fn(req, res, next).catch(next);
+};
+
+//validate entries
+const validateEntry = ({ title, body }) => {
+  if (!title || !body) return Err("title and body are required");
+  return Ok({ title, body });
+};
+
+//find entry by id
+const findEntryById = (entries, id) => {
+  const entry = entries[id];
+  return entry ? Some(entry) : None;
+};
 
 //read and write to entries data with async functions
 const readEntries = async () => {
@@ -26,24 +44,49 @@ router.get("/", async (req, res) => {
 
 //POST: create an entry from the JSON body (needs express.json() middleware)
 router.post("/", async (req, res) => {
-  const { title, body } = req.body;
-  if (!title || !body) {
-    res.status(400).json({ error: "title and body are required" });
-    return; //sending a message doesn't stop the function
+  const result = validateEntry(req.body);
+  if (!result.ok) {
+    res.status(400).json({ error: result.error });
+    return;
   }
   const entries = await readEntries();
-  const newEntry = { title, body };
-  entries.push(newEntry);
+  entries.push(result.value);
   await writeEntries(entries);
-  res.status(201).json(newEntry);
+  res.status(201).json(result.value);
 });
+
+router.put(
+  "/:id",
+  asyncHandler(async (req, res) => {
+    const id = parseInt(req.params.id);
+    const entries = await readEntries();
+
+    const found = findEntryById(entries, id);
+    if (!found.some) {
+      res.status(404).json({ error: "Entry not found" });
+      return;
+    }
+
+    const result = validateEntry(req.body);
+    if (!result.ok) {
+      res.status(400).json({ error: result.error });
+      return;
+    }
+
+    entries[id] = result.value;
+    await writeEntries(entries);
+    res.status(200).json(result.value);
+  }),
+);
 
 //DELETE: remove an entry by its position in the array
 router.delete("/:id", async (req, res) => {
   const id = parseInt(req.params.id); //url params are always strings
   const entries = await readEntries();
+
+  const found = findEntryById(entries, id);
   //sanity check on deletion
-  if (Number.isNaN(id) || id < 0 || id >= entries.length) {
+  if (!found.some) {
     res.status(404).json({ error: "Entry not found" });
     return;
   }
