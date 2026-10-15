@@ -1,14 +1,18 @@
 //import dependencies
 import express from "express";
 import morgan from "morgan";
-
-//import routes
-import pagesRouter from "./routes/pages.js";
+import mongoose from "mongoose";
 import entriesRouter from "./routes/entries.js";
 
 // initialize app object and set port
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+//connect to database
+await mongoose.connect(
+  process.env.MONGODB_URI ||
+    "mongodb://dev:devpassword@mongo:27017/devdb?authSource=admin",
+);
 
 //tell express to use ejs engine
 app.set("view engine", "ejs");
@@ -19,16 +23,15 @@ app.use(express.static("public")); //serve public routes
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//logger
 app.use((req, res, next) => {
-  //logger
   console.log(`${req.method} ${req.url}`);
   next();
 });
 
 app.use(morgan("dev"));
 
-//routes
-app.use("/", pagesRouter);
+//route
 app.use("/entries", entriesRouter);
 
 app.use((req, res) => {
