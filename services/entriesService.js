@@ -9,9 +9,11 @@ import {
 import { toEntryDto } from "../dtos/entryDto.js";
 
 const validateEntry = ({ title, body }) => {
-  if (!title || !body)
+  const trimmedTitle = (title || "").trim();
+  const trimmedBody = (body || "").trim();
+  if (!trimmedTitle || !trimmedBody)
     return Err({ status: 400, message: "title and body are required" });
-  return Ok({ title, body });
+  return Ok({ title: trimmedTitle, body: trimmedBody });
 };
 
 export const listEntries = async () => (await getAll()).map(toEntryDto);

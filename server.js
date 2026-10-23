@@ -34,15 +34,18 @@ app.use(morgan("dev"));
 //route
 app.use("/entries", entriesRouter);
 
+//page not found
 app.use((req, res) => {
   res.status(404).send("Page not found.");
 });
 
+//error handler
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).send("Something went wrong");
 });
 
+//server start
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });

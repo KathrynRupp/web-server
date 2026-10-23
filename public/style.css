@@ -114,3 +114,9 @@ li {
 .edit-form .cancel-btn {
   background-color: #888;
 }
+
+.status {
+  min-height: 1.5em;
+  margin: 0 0 1rem;
+  color: #b00020;
+}
