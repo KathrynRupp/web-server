@@ -23,12 +23,11 @@ app.use(express.static("public")); //serve public routes
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//logger
+//loggers
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`);
   next();
 });
-
 app.use(morgan("dev"));
 
 //route
@@ -49,12 +48,3 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
-// step one
-// step two
-// step three
-// checkpoint 1
-// checkpoint 2
-// checkpoint 3
-// BUG: off-by-one introduced here
-// checkpoint 4
-// checkpoint 5

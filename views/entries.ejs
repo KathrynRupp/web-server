@@ -16,6 +16,7 @@
       }'
     >
     <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <script src="/focus.js" defer></script>
   </head>
   <body
     hx-on::send-error="document.querySelector('#status').textContent = 'Could not reach the server.'"
@@ -25,7 +26,7 @@
     <main>
       <%- include('partials/entry-form') %>
       <%- include('partials/status') %>
-      <ul id="entries">
+      <ul id="entries" tabindex="-1">
         <% entries.forEach((entry) => { %>
           <%- include('partials/entry', { entry }) %>
         <% }); %>

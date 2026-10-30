@@ -8,6 +8,14 @@ import {
 } from "../repositories/entriesRepository.js";
 import { toEntryDto } from "../dtos/entryDto.js";
 
+export const getEntry = async (id) => {
+  const entry = await findById(id);
+  if (!entry) {
+    return Err({ status: 404, message: "Entry not found" });
+  }
+  return Ok(toEntryDto(entry));
+};
+
 const validateEntry = ({ title, body }) => {
   const trimmedTitle = (title || "").trim();
   const trimmedBody = (body || "").trim();
@@ -31,6 +39,13 @@ export const updateEntry = async (id, data) => {
   const result = validateEntry(data);
   if (!result.ok) return result;
   return Ok(toEntryDto(await updateById(id, result.value)));
+};
+
+export const toggleFavorite = async (id) => {
+  const existing = await findById(id);
+  if (!existing) return Err({ status: 404, message: "Entry not found" });
+  const updated = await updateById(id, { favorite: !existing.favorite });
+  return Ok(toEntryDto(updated));
 };
 
 export const deleteEntry = async (id) => {
