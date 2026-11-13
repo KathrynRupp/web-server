@@ -2,11 +2,16 @@
 import express from "express";
 import morgan from "morgan";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 import entriesRouter from "./routes/entries.js";
+import authRouter from "./routes/auth.js";
+import { attachUser } from "./middleware/attachUser.js";
 
 // initialize app object and set port
 const app = express();
 const PORT = process.env.PORT || 3000;
+const SESSION_SECRET =
+  process.env.SESSION_SECRET || "dev-secret-change-in-production";
 
 //connect to database
 await mongoose.connect(
@@ -29,8 +34,11 @@ app.use((req, res, next) => {
   next();
 });
 app.use(morgan("dev"));
+app.use(cookieParser(SESSION_SECRET));
+app.use(attachUser);
 
 //route
+app.use(authRouter);
 app.use("/entries", entriesRouter);
 
 //page not found
